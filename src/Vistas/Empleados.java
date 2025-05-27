@@ -5,10 +5,14 @@
 package Vistas;
 
 
+import entity.Empleado;
+import entity.Persistencia;
 import java.awt.Color;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import jpaController.EmpleadoJpaController;
 
 
 
@@ -17,21 +21,41 @@ import javax.swing.table.DefaultTableModel;
  * @author crist
  */
 public class Empleados extends javax.swing.JPanel {
-        
+       private Persistencia persis;
+       private Empleado empleado;
+       private EmpleadoJpaController controlador_empleado;
+       private List<Empleado> empleados;
+       
     /**
      * Creates new form num1
      */
     public Empleados() {
         initComponents();
         styles();
+        persis= new Persistencia();
         cargarEmpleados();
     }
     
     private void cargarEmpleados(){
         //Cargar los usuarios en la tabla
-      
-   
-      
+        controlador_empleado=new EmpleadoJpaController(persis.getEmf());
+        empleados=controlador_empleado.findEmpleadoEntities();
+        DefaultTableModel model= (DefaultTableModel) emple.getModel();
+        model.setRowCount(0);
+        
+        empleados.forEach(emplead ->{
+            String turno=emplead.getTurnoCollection().stream().map(
+                    tur->
+                            tur.getIdTurnoTipo().getDescripcion()).collect(Collectors.joining(", "));
+            model.addRow(new Object[]{
+                emplead.getIdEmpleado(),
+                emplead.getNombre(),
+                emplead.getApellidos(),
+                turno,
+                emplead.getIdUsuario().getIdRol().getIdRol(),
+                emplead.getIdUsuario().getContrasena()
+            });
+        });
     }
     
     private void styles(){
@@ -53,7 +77,7 @@ public class Empleados extends javax.swing.JPanel {
 
         contenido = new javax.swing.JPanel();
         calendario = new javax.swing.JScrollPane();
-        Doctores = new javax.swing.JTable();
+        emple = new javax.swing.JTable();
         btnNuevo = new javax.swing.JButton();
         title = new javax.swing.JLabel();
         btnBorrar = new javax.swing.JButton();
@@ -63,20 +87,20 @@ public class Empleados extends javax.swing.JPanel {
 
         contenido.setBackground(new java.awt.Color(255, 255, 255));
 
-        Doctores.setFont(new java.awt.Font("Segoe UI Symbol", 1, 12)); // NOI18N
-        Doctores.setModel(new javax.swing.table.DefaultTableModel(
+        emple.setFont(new java.awt.Font("Segoe UI Symbol", 1, 12)); // NOI18N
+        emple.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Id", "Nombre", "Apellidos", "Hora entrada", "Hora salida", "Rol", "Contraseña"
+                "Id", "Nombre", "Apellidos", "Turno", "Rol", "Contraseña"
             }
         ));
-        Doctores.setCellSelectionEnabled(true);
-        Doctores.setName(""); // NOI18N
-        Doctores.setShowGrid(true);
-        calendario.setViewportView(Doctores);
-        Doctores.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        emple.setCellSelectionEnabled(true);
+        emple.setName(""); // NOI18N
+        emple.setShowGrid(true);
+        calendario.setViewportView(emple);
+        emple.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 
         btnNuevo.setText("Nuevo");
         btnNuevo.addActionListener(new java.awt.event.ActionListener() {
@@ -192,7 +216,8 @@ public class Empleados extends javax.swing.JPanel {
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
         // llamar al metodo estatico de la clase inicioAdmi para que se pueda mandar a llamar a un panel
         //con un boton que hace referencia a otro panel en la clase de pacientesC
-           Main.showJpane(new agregarEmpleado());
+           
+           MainAdmin.showJpane(new agregarEmpleado());
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
@@ -205,13 +230,13 @@ public class Empleados extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Doctores;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnNuevo;
     private javax.swing.JScrollPane calendario;
     private javax.swing.JPanel contenido;
+    private javax.swing.JTable emple;
     private javax.swing.JLabel title;
     private javax.swing.JTextField txtBuscador;
     // End of variables declaration//GEN-END:variables
