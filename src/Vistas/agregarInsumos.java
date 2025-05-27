@@ -66,8 +66,6 @@ public class agregarInsumos extends javax.swing.JPanel {
         panelNorte = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
-        setLayout(new java.awt.BorderLayout());
-
         panelCentro.setBackground(new java.awt.Color(202, 167, 145));
         panelCentro.setForeground(new java.awt.Color(255, 255, 255));
         panelCentro.setPreferredSize(new java.awt.Dimension(359, 300));
@@ -118,8 +116,6 @@ public class agregarInsumos extends javax.swing.JPanel {
         });
         panelCentro.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, 124, -1));
 
-        add(panelCentro, java.awt.BorderLayout.CENTER);
-
         panerlSur.setBackground(new java.awt.Color(132, 85, 83));
         panerlSur.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -147,14 +143,28 @@ public class agregarInsumos extends javax.swing.JPanel {
         });
         panerlSur.add(btnAgregar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, -1));
 
-        add(panerlSur, java.awt.BorderLayout.PAGE_END);
-
         panelNorte.setBackground(new java.awt.Color(202, 167, 145));
 
         jLabel5.setText("C R E A R   I N S U M O ");
         panelNorte.add(jLabel5);
 
-        add(panelNorte, java.awt.BorderLayout.PAGE_START);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, 803, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
     public void guardarInsumo(String nombre, String descripcion, int cantidad) {
         try {

@@ -52,6 +52,7 @@ public class agregarProductos extends javax.swing.JPanel {
         EntityManagerFactory emf = persis.getEmf();
         jpaproducto = new ProductoJpaController(emf);
         jpareceta = new RecetaJpaController(emf);
+        jpaInsumo = new InsumoJpaController(emf);
         producto = new Producto();
         llenarComboImagen();
         llenarComboReceta();
@@ -98,8 +99,6 @@ public class agregarProductos extends javax.swing.JPanel {
         btnAgInsumo = new javax.swing.JButton();
         btnCancelar1 = new javax.swing.JButton();
 
-        setLayout(new java.awt.BorderLayout());
-
         panelNorte.setBackground(new java.awt.Color(132, 85, 83));
         panelNorte.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -118,11 +117,8 @@ public class agregarProductos extends javax.swing.JPanel {
         });
         panelNorte.add(crearReceta, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 50, -1, -1));
 
-        add(panelNorte, java.awt.BorderLayout.PAGE_START);
-
         panerlSur.setBackground(new java.awt.Color(132, 85, 83));
         panerlSur.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        add(panerlSur, java.awt.BorderLayout.PAGE_END);
 
         panelIzq.setBackground(new java.awt.Color(202, 167, 145));
         panelIzq.setForeground(new java.awt.Color(255, 255, 255));
@@ -134,6 +130,11 @@ public class agregarProductos extends javax.swing.JPanel {
         jLabel9.setText("Receta");
 
         comboInsumo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboInsumo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboInsumoActionPerformed(evt);
+            }
+        });
 
         jLabel11.setText("Cantidad");
 
@@ -317,9 +318,8 @@ public class agregarProductos extends javax.swing.JPanel {
                         .addComponent(btnAgInsumo)
                         .addGap(38, 38, 38)
                         .addComponent(btnCancelar1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(70, 70, 70))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelIzqLayout.setVerticalGroup(
             panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -348,7 +348,20 @@ public class agregarProductos extends javax.swing.JPanel {
                 .addGap(13, 13, 13))
         );
 
-        add(panelIzq, java.awt.BorderLayout.CENTER);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelIzq, javax.swing.GroupLayout.DEFAULT_SIZE, 801, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(panelIzq, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
+        );
     }// </editor-fold>//GEN-END:initComponents
     public void guardarInsumoS(Receta receta, Insumo insumo, int cantidad) {
         try {
@@ -562,6 +575,10 @@ public class agregarProductos extends javax.swing.JPanel {
     private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelar1ActionPerformed
+
+    private void comboInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboInsumoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboInsumoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
