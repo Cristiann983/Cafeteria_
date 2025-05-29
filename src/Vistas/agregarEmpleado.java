@@ -69,50 +69,10 @@ public class agregarEmpleado extends javax.swing.JPanel {
         llenarComboTurnos();
     }
 
-    public Usuario guardarUsuario(String nombre, String apellido, String contrasena) {
-        try {
-            Usuario usuario = new Usuario();
-            usuario.setNombreU(nombre);
-            usuario.setContrasena(contrasena);
-            usuarioJPA.create(usuario);
-            JOptionPane.showMessageDialog(null, "····Se Guadro Con Exito····");
-            return usuario;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
+   
 
-    public void guardarTurno(Empleado empleado, int turnos, int encargado, int tipoTurno, Date fecha) {
-        try {
-            Turno turno = new Turno();
-            turno.setIdEmpleado(empleado);
-            turno.setIdTurno(turnos);
-            turno.setFecha(new Date());
-            turnoJPA.create(turno);
-            JOptionPane.showMessageDialog(null, "····Se Guardpo Con Exito el Turno····");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar el turno: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-        }
-    }
-
-    public Empleado guardarEmpleado(String nombre, String apellido, Usuario idUsuario) {
-        try {
-            Empleado empleado = new Empleado();
-            empleado = new Empleado();
-            empleado.setNombre(nombre);
-            empleado.setApellidos(apellido);
-            empleado.setIdUsuario(idUsuario);
-            empleadoJPA.create(empleado);
-            JOptionPane.showMessageDialog(null, "Empleado guardado con éxito");
-            return empleado;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar Empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-
-    }
+   
+    
 
     public void llenarComboTurnos() {
         try {
