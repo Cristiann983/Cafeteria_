@@ -521,7 +521,7 @@ public class agregarProductos extends javax.swing.JPanel {
     private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
 
         char c = evt.getKeyChar();
-        if (!Character.isDigit(c)) {
+        if (!Character.isDigit(c)&& !Character.isISOControl(c)) {
             JOptionPane.showMessageDialog(null, "Solo se permiten números");
             evt.consume(); // Evita que el carácter se escriba
             getToolkit().beep(); // Sonido de advertencia
@@ -531,7 +531,7 @@ public class agregarProductos extends javax.swing.JPanel {
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
         char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
+        if (!Character.isLetter(c) && !Character.isWhitespace(c)&& !Character.isISOControl(c)) {
             JOptionPane.showMessageDialog(null, "No Se Aceptan Numeros");
             evt.consume();
             getToolkit().beep();
