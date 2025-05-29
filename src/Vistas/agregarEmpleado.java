@@ -69,50 +69,10 @@ public class agregarEmpleado extends javax.swing.JPanel {
         llenarComboTurnos();
     }
 
-    public Usuario guardarUsuario(String nombre, String apellido, String contrasena) {
-        try {
-            Usuario usuario = new Usuario();
-            usuario.setNombreU(nombre);
-            usuario.setContrasena(contrasena);
-            usuarioJPA.create(usuario);
-            JOptionPane.showMessageDialog(null, "····Se Guadro Con Exito····");
-            return usuario;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar usuario: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-    }
+   
 
-    public void guardarTurno(Empleado empleado, int turnos, int encargado, int tipoTurno, Date fecha) {
-        try {
-            Turno turno = new Turno();
-            turno.setIdEmpleado(empleado);
-            turno.setIdTurno(turnos);
-            turno.setFecha(new Date());
-            turnoJPA.create(turno);
-            JOptionPane.showMessageDialog(null, "····Se Guardpo Con Exito el Turno····");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar el turno: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-        }
-    }
-
-    public Empleado guardarEmpleado(String nombre, String apellido, Usuario idUsuario) {
-        try {
-            Empleado empleado = new Empleado();
-            empleado = new Empleado();
-            empleado.setNombre(nombre);
-            empleado.setApellidos(apellido);
-            empleado.setIdUsuario(idUsuario);
-            empleadoJPA.create(empleado);
-            JOptionPane.showMessageDialog(null, "Empleado guardado con éxito");
-            return empleado;
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar Empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            return null;
-        }
-
-    }
+   
+    
 
     public void llenarComboTurnos() {
         try {
@@ -334,30 +294,29 @@ public class agregarEmpleado extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(109, 109, 109)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(173, 173, 173)
-                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 106, Short.MAX_VALUE)))
+                        .addGap(173, 173, 173)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnAgregar, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 119, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel1)
-                .addGap(31, 31, 31)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAgregar)
                     .addComponent(btnCancelar))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -439,8 +398,9 @@ public class agregarEmpleado extends javax.swing.JPanel {
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
         char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
-            JOptionPane.showMessageDialog(null, "No Se Aceptan Numeros");
+
+        if (!Character.isLetter(c) && !Character.isWhitespace(c) && !Character.isISOControl(c)) {
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras y espacios.");
             evt.consume();
             getToolkit().beep();
         }
@@ -448,9 +408,10 @@ public class agregarEmpleado extends javax.swing.JPanel {
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void txtApellidosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidosKeyTyped
-        char c = evt.getKeyChar();
-        if (!Character.isLetter(c) ) {
-            JOptionPane.showMessageDialog(null, "No Se Aceptan Numeros");
+         char c = evt.getKeyChar();
+
+        if (!Character.isLetter(c) && !Character.isWhitespace(c) && !Character.isISOControl(c)) {
+            JOptionPane.showMessageDialog(null, "Solo se permiten letras y espacios.");
             evt.consume();
             getToolkit().beep();
         }
