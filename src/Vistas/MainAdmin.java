@@ -155,7 +155,7 @@ public class MainAdmin extends javax.swing.JFrame {
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
 
         contenido.setBackground(new java.awt.Color(204, 204, 204));
@@ -207,7 +207,7 @@ public class MainAdmin extends javax.swing.JFrame {
          showJpane(new Empleados());
      } 
     public static void showJpane(JPanel n1){
-     n1.setSize(1000,700);
+     n1.setSize(1280,860);
      n1.setLocation(0,0);
      contenido.removeAll();
      contenido.add(n1,BorderLayout.CENTER);
@@ -224,7 +224,7 @@ public class MainAdmin extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-         showJpane(new Productos());
+         showJpane(new Productos_());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
