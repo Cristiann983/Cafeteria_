@@ -205,7 +205,7 @@ public class agregarProductos extends javax.swing.JPanel {
             }
         });
 
-        btnCancelar.setText("Cancelar");
+        btnCancelar.setText("Limpiar campos");
         btnCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCancelarActionPerformed(evt);
@@ -242,17 +242,19 @@ public class agregarProductos extends javax.swing.JPanel {
                         .addGap(77, 77, 77)
                         .addComponent(Archivo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelCentroLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnCancelar))
-                    .addGroup(panelCentroLayout.createSequentialGroup()
-                        .addGap(121, 121, 121)
+                        .addGap(168, 168, 168)
                         .addComponent(btnAgregarP)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCentroLayout.createSequentialGroup()
+                .addComponent(btnCancelar)
+                .addGap(55, 55, 55))
         );
         panelCentroLayout.setVerticalGroup(
             panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCentroLayout.createSequentialGroup()
-                .addGap(110, 110, 110)
+                .addGap(35, 35, 35)
+                .addComponent(btnCancelar)
+                .addGap(52, 52, 52)
                 .addComponent(jLabel1)
                 .addGap(54, 54, 54)
                 .addGroup(panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,11 +276,9 @@ public class agregarProductos extends javax.swing.JPanel {
                 .addGroup(panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(Archivo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(btnAgregarP)
-                .addGap(20, 20, 20)
-                .addComponent(btnCancelar)
-                .addGap(72, 72, 72))
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         comboReceta2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -318,14 +318,12 @@ public class agregarProductos extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIzqLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAgInsumo)
-                        .addGap(100, 100, 100)))
+                        .addGap(141, 141, 141)))
                 .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelIzqLayout.setVerticalGroup(
             panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelIzqLayout.createSequentialGroup()
-                .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(panelIzqLayout.createSequentialGroup()
                 .addGap(110, 110, 110)
                 .addComponent(jLabel12)
@@ -341,9 +339,8 @@ public class agregarProductos extends javax.swing.JPanel {
                 .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(txtcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAgInsumo)
-                .addGap(110, 110, 110))
+                .addGap(38, 38, 38)
+                .addComponent(btnAgInsumo))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
