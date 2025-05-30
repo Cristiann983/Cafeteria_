@@ -55,7 +55,6 @@ public class Login extends javax.swing.JFrame {
 
         citybg.setBackground(new java.awt.Color(0, 134, 190));
         citybg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        citybg.setText("Imagen de la empresa");
         bg.add(citybg, new org.netbeans.lib.awtextra.AbsoluteConstraints(548, 0, 290, 500));
 
         logoname.setBackground(new java.awt.Color(255, 255, 255));
