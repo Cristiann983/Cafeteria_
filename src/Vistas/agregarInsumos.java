@@ -10,12 +10,14 @@ import entity.Producto;
 import entity.Receta;
 import java.awt.Color;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 import jpaController.InsumoJpaController;
 import jpaController.ProductoJpaController;
 import jpaController.RecetaJpaController;
@@ -30,6 +32,8 @@ public class agregarInsumos extends javax.swing.JPanel {
 
     private Insumo insumo;
     private InsumoJpaController jpaInsumo;
+    private List<Insumo> insumos;
+    private int idSeleccionado = -1; // verificar que este selccionado alguno
 
     /**
      * Creates new form agregarEmpleado
@@ -40,7 +44,7 @@ public class agregarInsumos extends javax.swing.JPanel {
         EntityManagerFactory emf = persis.getEmf();
         jpaInsumo = new InsumoJpaController(emf);
         insumo = new Insumo();
-
+        cargarInsumos();
     }
 
     /**
@@ -59,10 +63,12 @@ public class agregarInsumos extends javax.swing.JPanel {
         txtNombre = new javax.swing.JTextField();
         txtDescripccion = new javax.swing.JTextField();
         txtCantidad = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaInsumos = new javax.swing.JTable();
         panerlSur = new javax.swing.JPanel();
         btnCancelar = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
-        btnAgregar1 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         panelNorte = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -77,20 +83,20 @@ public class agregarInsumos extends javax.swing.JPanel {
         panelCentro.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setText("Nombre ");
-        panelCentro.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 70, 73, -1));
+        panelCentro.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 40, 73, -1));
 
         jLabel3.setText("Descripccion");
-        panelCentro.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 120, 73, -1));
+        panelCentro.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 73, -1));
 
         jLabel6.setText("Cantidad");
-        panelCentro.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, 73, -1));
+        panelCentro.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, 73, -1));
 
         txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtNombreKeyTyped(evt);
             }
         });
-        panelCentro.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, 124, -1));
+        panelCentro.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, 124, -1));
 
         txtDescripccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,7 +108,7 @@ public class agregarInsumos extends javax.swing.JPanel {
                 txtDescripccionKeyTyped(evt);
             }
         });
-        panelCentro.add(txtDescripccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 120, 124, 20));
+        panelCentro.add(txtDescripccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 80, 124, 20));
 
         txtCantidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -114,7 +120,27 @@ public class agregarInsumos extends javax.swing.JPanel {
                 txtCantidadKeyTyped(evt);
             }
         });
-        panelCentro.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, 124, -1));
+        panelCentro.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 110, 124, -1));
+
+        tablaInsumos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "Nombre ", "Descripcion", "Cantidad"
+            }
+        ));
+        tablaInsumos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaInsumosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaInsumos);
+
+        panelCentro.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 630, 140));
 
         panerlSur.setBackground(new java.awt.Color(132, 85, 83));
         panerlSur.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -125,7 +151,7 @@ public class agregarInsumos extends javax.swing.JPanel {
                 btnCancelarActionPerformed(evt);
             }
         });
-        panerlSur.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 0, -1, -1));
+        panerlSur.add(btnCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 0, -1, -1));
 
         btnAgregar.setText("Agregar");
         btnAgregar.addActionListener(new java.awt.event.ActionListener() {
@@ -133,15 +159,15 @@ public class agregarInsumos extends javax.swing.JPanel {
                 btnAgregarActionPerformed(evt);
             }
         });
-        panerlSur.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, -1));
+        panerlSur.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, -1, -1));
 
-        btnAgregar1.setText("Agregar");
-        btnAgregar1.addActionListener(new java.awt.event.ActionListener() {
+        jButton1.setText("Editar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar1ActionPerformed(evt);
+                jButton1ActionPerformed(evt);
             }
         });
-        panerlSur.add(btnAgregar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 0, -1, -1));
+        panerlSur.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, -1, -1));
 
         panelNorte.setBackground(new java.awt.Color(202, 167, 145));
 
@@ -154,16 +180,16 @@ public class agregarInsumos extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, 803, Short.MAX_VALUE)
+            .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, 765, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     public void guardarInsumo(String nombre, String descripcion, int cantidad) {
@@ -174,6 +200,7 @@ public class agregarInsumos extends javax.swing.JPanel {
             insumo.setCantidad(cantidad);
             jpaInsumo.create(insumo);
             JOptionPane.showMessageDialog(null, "Insumo guardado con éxito");
+            cargarInsumos();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al guardar Empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -182,9 +209,50 @@ public class agregarInsumos extends javax.swing.JPanel {
 
     }
 
+    private void cargarInsumos() {
+        jpaInsumo = new InsumoJpaController(persis.getEmf());
+        insumos = jpaInsumo.findInsumoEntities();
+        DefaultTableModel model = (DefaultTableModel) tablaInsumos.getModel();
+        model.setRowCount(0);
+
+        for (Insumo insumo : insumos) {
+            model.addRow(new Object[]{
+                insumo.getIdInsumo(),
+                insumo.getNombre(),
+                insumo.getDescripcion(),
+                insumo.getCantidad()
+            });
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombre.setText("");
+        txtDescripccion.setText("");
+        txtCantidad.setText("");
+        idSeleccionado = -1; // Reinicia el ID seleccionado si estás en modo edición
+    }
+
+    public void editarInsumo(int id, String nombre, String descripcion, int cantidad) {
+        try {
+            Insumo insumo = jpaInsumo.findInsumo(id);
+            if (insumo != null) {
+                insumo.setNombre(nombre);
+                insumo.setDescripcion(descripcion);
+                insumo.setCantidad(cantidad);
+                jpaInsumo.edit(insumo);
+                JOptionPane.showMessageDialog(null, "Insumo editado con éxito");
+                cargarInsumos();
+            } else {
+                JOptionPane.showMessageDialog(null, "Insumo no encontrado");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al editar Insumo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
+        limpiarCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
@@ -220,10 +288,10 @@ public class agregarInsumos extends javax.swing.JPanel {
 
     private void txtCantidadKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadKeyTyped
         char c = evt.getKeyChar();
-        if (!Character.isDigit(c)) {
-            JOptionPane.showMessageDialog(null, "Solo se aceptan números");
-            evt.consume();
-            getToolkit().beep();
+        if (!Character.isDigit(c) && !Character.isISOControl(c)) {
+            JOptionPane.showMessageDialog(null, "Solo se permiten números");
+            evt.consume(); // Evita que el carácter se escriba
+            getToolkit().beep(); // Sonido de advertencia
         }
 
 
@@ -231,16 +299,12 @@ public class agregarInsumos extends javax.swing.JPanel {
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
         char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
+        if (!Character.isLetter(c) && !Character.isWhitespace(c) && !Character.isISOControl(c)) {
             JOptionPane.showMessageDialog(null, "No Se Aceptan Numeros");
             evt.consume();
             getToolkit().beep();
         }
     }//GEN-LAST:event_txtNombreKeyTyped
-
-    private void btnAgregar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregar1ActionPerformed
 
     private void txtDescripccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripccionActionPerformed
         // TODO add your handling code here:
@@ -249,7 +313,7 @@ public class agregarInsumos extends javax.swing.JPanel {
     private void txtDescripccionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDescripccionKeyTyped
         // TODO add your handling code here:
         char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
+        if (!Character.isLetter(c) && !Character.isWhitespace(c) && !Character.isISOControl(c)) {
             JOptionPane.showMessageDialog(null, "No Se Aceptan Numeros");
             evt.consume();
             getToolkit().beep();
@@ -260,18 +324,63 @@ public class agregarInsumos extends javax.swing.JPanel {
 
     }//GEN-LAST:event_panelCentroKeyTyped
 
+    private void tablaInsumosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaInsumosMouseClicked
+        // TODO add your handling code here:
+        int fila = tablaInsumos.getSelectedRow();
+        if (fila >= 0) {
+            txtNombre.setText(tablaInsumos.getValueAt(fila, 1).toString());
+            txtDescripccion.setText(tablaInsumos.getValueAt(fila, 2).toString());
+            txtCantidad.setText(tablaInsumos.getValueAt(fila, 3).toString());
+            idSeleccionado = (int) tablaInsumos.getValueAt(fila, 0); // Guarda el ID para editar
+        }
+
+    }//GEN-LAST:event_tablaInsumosMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        String nombre = txtNombre.getText();
+        String descripcion = txtDescripccion.getText();
+        String cantidadTexto = txtCantidad.getText();
+
+        if (nombre.isEmpty() || descripcion.isEmpty() || cantidadTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(cantidadTexto);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "La cantidad debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (idSeleccionado != -1) {
+            editarInsumo(idSeleccionado, nombre, descripcion, cantidad);
+            txtNombre.setText("");
+            txtDescripccion.setText("");
+            txtCantidad.setText("");
+            idSeleccionado = -1;
+        } else {
+            JOptionPane.showMessageDialog(this, "Selecciona una fila primero para editar.");
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
-    private javax.swing.JButton btnAgregar1;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelCentro;
     private javax.swing.JPanel panelNorte;
     private javax.swing.JPanel panerlSur;
+    private javax.swing.JTable tablaInsumos;
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtDescripccion;
     private javax.swing.JTextField txtNombre;

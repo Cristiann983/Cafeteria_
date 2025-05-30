@@ -11,13 +11,18 @@ import entity.Receta;
 import entity.Recetainsumo;
 import entity.RecetainsumoPK;
 import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import jpaController.InsumoJpaController;
 import jpaController.ProductoJpaController;
 import jpaController.RecetaJpaController;
@@ -43,6 +48,8 @@ public class agregarProductos extends javax.swing.JPanel {
     private Insumo insumo;
     private InsumoJpaController jpaInsumo;
 
+    private byte[] imagenSeleccionada = null;
+
     /**
      * Creates new form agregarEmpleado
      */
@@ -53,6 +60,7 @@ public class agregarProductos extends javax.swing.JPanel {
         jpaproducto = new ProductoJpaController(emf);
         jpareceta = new RecetaJpaController(emf);
         jpaInsumo = new InsumoJpaController(emf);
+        jpaRinsumo = new RecetainsumoJpaController(emf);
         producto = new Producto();
         llenarComboImagen();
         llenarComboReceta();
@@ -93,11 +101,10 @@ public class agregarProductos extends javax.swing.JPanel {
         txtPrecio = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         Archivo = new javax.swing.JButton();
-        btnAgregar2 = new javax.swing.JButton();
+        btnAgregarP = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         comboReceta2 = new javax.swing.JComboBox<>();
         btnAgInsumo = new javax.swing.JButton();
-        btnCancelar1 = new javax.swing.JButton();
 
         panelNorte.setBackground(new java.awt.Color(132, 85, 83));
         panelNorte.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -191,10 +198,10 @@ public class agregarProductos extends javax.swing.JPanel {
             }
         });
 
-        btnAgregar2.setText("Agregar");
-        btnAgregar2.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregarP.setText("Agregar");
+        btnAgregarP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregar2ActionPerformed(evt);
+                btnAgregarPActionPerformed(evt);
             }
         });
 
@@ -235,11 +242,12 @@ public class agregarProductos extends javax.swing.JPanel {
                         .addGap(77, 77, 77)
                         .addComponent(Archivo, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelCentroLayout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addComponent(btnAgregar2)
-                        .addGap(50, 50, 50)
-                        .addComponent(btnCancelar)))
-                .addGap(39, 39, 39))
+                        .addContainerGap()
+                        .addComponent(btnCancelar))
+                    .addGroup(panelCentroLayout.createSequentialGroup()
+                        .addGap(121, 121, 121)
+                        .addComponent(btnAgregarP)))
+                .addContainerGap())
         );
         panelCentroLayout.setVerticalGroup(
             panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -266,11 +274,11 @@ public class agregarProductos extends javax.swing.JPanel {
                 .addGroup(panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
                     .addComponent(Archivo))
-                .addGap(46, 46, 46)
-                .addGroup(panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnAgregar2)
-                    .addComponent(btnCancelar))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(btnAgregarP)
+                .addGap(20, 20, 20)
+                .addComponent(btnCancelar)
+                .addGap(72, 72, 72))
         );
 
         comboReceta2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -279,13 +287,6 @@ public class agregarProductos extends javax.swing.JPanel {
         btnAgInsumo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgInsumoActionPerformed(evt);
-            }
-        });
-
-        btnCancelar1.setText("Cancelar");
-        btnCancelar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelar1ActionPerformed(evt);
             }
         });
 
@@ -306,46 +307,43 @@ public class agregarProductos extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                                 .addComponent(comboReceta2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelIzqLayout.createSequentialGroup()
-                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelIzqLayout.createSequentialGroup()
                                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(comboInsumo, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(panelIzqLayout.createSequentialGroup()
-                        .addGap(110, 110, 110)
+                                .addComponent(comboInsumo, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIzqLayout.createSequentialGroup()
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIzqLayout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnAgInsumo)
-                        .addGap(38, 38, 38)
-                        .addComponent(btnCancelar1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                        .addGap(100, 100, 100)))
                 .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         panelIzqLayout.setVerticalGroup(
             panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelIzqLayout.createSequentialGroup()
-                .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelIzqLayout.createSequentialGroup()
-                        .addGap(110, 110, 110)
-                        .addComponent(jLabel12)
-                        .addGap(54, 54, 54)
-                        .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(comboReceta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(25, 25, 25)
-                        .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(comboInsumo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8))
-                        .addGap(18, 18, 18)
-                        .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11)
-                            .addComponent(txtcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(98, 98, 98)
-                        .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnAgInsumo)
-                            .addComponent(btnCancelar1)))
-                    .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13))
+                .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(panelIzqLayout.createSequentialGroup()
+                .addGap(110, 110, 110)
+                .addComponent(jLabel12)
+                .addGap(54, 54, 54)
+                .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(comboReceta2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboInsumo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addGap(18, 18, 18)
+                .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel11)
+                    .addComponent(txtcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAgInsumo)
+                .addGap(110, 110, 110))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -365,20 +363,32 @@ public class agregarProductos extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     public void guardarInsumoS(Receta receta, Insumo insumo, int cantidad) {
         try {
-            // Crear la clave primaria compuesta
-            RecetainsumoPK pk = new RecetainsumoPK(receta.getIdReceta(), insumo.getIdInsumo());
-            // Crear el objeto Recetainsumo con la clave compuesta y la cantidad
-            Recetainsumo rInsumo = new Recetainsumo(pk, cantidad);
+            RecetainsumoPK pk = new RecetainsumoPK();
+            pk.setIdReceta(receta.getIdReceta());
+            pk.setIdInsumo(insumo.getIdInsumo());
 
-            // Guardar usando JPA
+            // Verificar si ya existe
+            Recetainsumo existente = jpaRinsumo.findRecetainsumo(pk);
+            if (existente != null) {
+                JOptionPane.showMessageDialog(null, "Ya existe este insumo para la receta seleccionada.", "Insumo duplicado", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            Recetainsumo rInsumo = new Recetainsumo();
+            rInsumo.setRecetainsumoPK(pk);
+            rInsumo.setCantidad(cantidad);
+
+            // Aquí asignamos las relaciones para evitar null
+            rInsumo.setReceta(receta);
+            rInsumo.setInsumo(insumo);
+
             jpaRinsumo.create(rInsumo);
             llenarComboInsumo();
 
             JOptionPane.showMessageDialog(null, "Insumo utilizado guardado con éxito");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar el insumo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error al guardar el insumo metodo : " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }
 
     public void guardarProducto(Receta receta, String descripcion, long precio) {
@@ -387,8 +397,12 @@ public class agregarProductos extends javax.swing.JPanel {
             producto.setIdReceta(receta);
             producto.setDescripcion(descripcion);
             producto.setPrecio(precio);
-            jpaproducto.create(producto);
 
+            if (imagenSeleccionada != null) {
+                producto.setImagenProducto(imagenSeleccionada); // asegúrate de tener este campo en tu entidad
+            }
+
+            jpaproducto.create(producto);
             JOptionPane.showMessageDialog(null, "Producto guardado con éxito");
 
         } catch (Exception e) {
@@ -452,9 +466,26 @@ public class agregarProductos extends javax.swing.JPanel {
         }
     }
 
+    public void limpiarCampos() {
+        // Campos de producto
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        comboReceta.setSelectedIndex(0);
+        imagenSeleccionada = null;
+
+        // Campos de receta
+        nombreRc.setText("");
+
+        // Campos de insumo
+        txtcantidad.setText("");
+        comboReceta2.setSelectedIndex(0);
+        comboInsumo.setSelectedIndex(0);
+    }
+
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         // TODO add your handling code here:
+        limpiarCampos();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAgInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgInsumoActionPerformed
@@ -507,8 +538,6 @@ public class agregarProductos extends javax.swing.JPanel {
             // Guardar la relación RecetaInsumo
             guardarInsumoS(recetaSeleccionada, insumoSeleccionado, cantidad);
 
-            JOptionPane.showMessageDialog(this, "Insumo guardado con éxito");
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar el insumo: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -521,7 +550,7 @@ public class agregarProductos extends javax.swing.JPanel {
     private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
 
         char c = evt.getKeyChar();
-        if (!Character.isDigit(c)) {
+        if (!Character.isDigit(c) && !Character.isISOControl(c)) {
             JOptionPane.showMessageDialog(null, "Solo se permiten números");
             evt.consume(); // Evita que el carácter se escriba
             getToolkit().beep(); // Sonido de advertencia
@@ -530,16 +559,38 @@ public class agregarProductos extends javax.swing.JPanel {
     }//GEN-LAST:event_txtPrecioKeyTyped
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+
         char c = evt.getKeyChar();
-        if (!Character.isLetter(c) && !Character.isWhitespace(c)) {
+        if (!Character.isLetter(c) && !Character.isWhitespace(c) && !Character.isISOControl(c)) {
             JOptionPane.showMessageDialog(null, "No Se Aceptan Numeros");
             evt.consume();
             getToolkit().beep();
         }
+
+
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void ArchivoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ArchivoActionPerformed
         // TODO add your handling code here:
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Seleccionar imagen");
+        FileNameExtensionFilter filtro = new FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png", "gif");
+        fileChooser.setFileFilter(filtro);
+
+        int resultado = fileChooser.showOpenDialog(this);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+            try {
+                FileInputStream fis = new FileInputStream(archivo);
+                imagenSeleccionada = fis.readAllBytes();
+                fis.close();
+
+                JOptionPane.showMessageDialog(this, "Imagen seleccionada con éxito.");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, "Error al leer imagen: " + ex.getMessage());
+            }
+        }
 
     }//GEN-LAST:event_ArchivoActionPerformed
 
@@ -567,14 +618,49 @@ public class agregarProductos extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtcantidadKeyTyped
 
-    private void btnAgregar2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregar2ActionPerformed
+    private void btnAgregarPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarPActionPerformed
         // TODO add your handling code here:
-        
-    }//GEN-LAST:event_btnAgregar2ActionPerformed
+        String descripcion = txtNombre.getText();
+        String recetade = comboReceta.getSelectedItem() + "";
+        String precioTexto = txtPrecio.getText();
 
-    private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCancelar1ActionPerformed
+        if (descripcion.isEmpty() || recetade.isEmpty() || precioTexto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        long precio;
+
+        try {
+            precio = Long.parseLong(precioTexto);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El precio debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+
+            Receta recetaSeleccionada = null;
+            List<Receta> recetas = jpareceta.findRecetaEntities();
+            for (Receta re : recetas) {
+                if (re.getDescripcion().equals(recetade)) {
+                    recetaSeleccionada = re;
+                    break;
+                }
+            }
+
+            if (recetaSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Receta seleccionada no válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            guardarProducto(recetaSeleccionada, descripcion, precio);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar producto: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+    }//GEN-LAST:event_btnAgregarPActionPerformed
 
     private void comboInsumoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboInsumoActionPerformed
         // TODO add your handling code here:
@@ -584,9 +670,8 @@ public class agregarProductos extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Archivo;
     private javax.swing.JButton btnAgInsumo;
-    private javax.swing.JButton btnAgregar2;
+    private javax.swing.JButton btnAgregarP;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnCancelar1;
     private javax.swing.JComboBox<String> comboInsumo;
     private javax.swing.JComboBox<String> comboReceta;
     private javax.swing.JComboBox<String> comboReceta2;
