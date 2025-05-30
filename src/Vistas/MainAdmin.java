@@ -6,6 +6,8 @@ package Vistas;
 
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneLightIJTheme;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -203,6 +205,7 @@ public class MainAdmin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
      public void contents(){
          showJpane(new Empleados());
      } 
@@ -213,18 +216,20 @@ public class MainAdmin extends javax.swing.JFrame {
      contenido.add(n1,BorderLayout.CENTER);
      contenido.revalidate();
      contenido.repaint();
+     
     }
-    
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
          
-         showJpane(new Empleados());
+        showJpane(new Empleados());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+
          showJpane(new Productos_());
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -273,16 +278,16 @@ public class MainAdmin extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(MainAdmin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-                    try {
-                UIManager.setLookAndFeel(new FlatAtomOneLightIJTheme());
+        try {
+            UIManager.setLookAndFeel(new FlatAtomOneLightIJTheme());
         } catch (Exception e) {
             e.printStackTrace();
         }
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
-               new MainAdmin().setVisible(true);
+
+                new MainAdmin().setVisible(true);
             }
         });
     }

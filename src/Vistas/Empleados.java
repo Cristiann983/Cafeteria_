@@ -24,6 +24,7 @@ import jpaController.UsuarioJpaController;
 
 /**
  *
+ * 
  * @author crist
  */
 public class Empleados extends javax.swing.JPanel {
