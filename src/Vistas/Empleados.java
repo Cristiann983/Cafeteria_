@@ -7,12 +7,18 @@ package Vistas;
 
 import entity.Empleado;
 import entity.Persistencia;
+import entity.Turno;
+import entity.Usuario;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import jpaController.EmpleadoJpaController;
+import jpaController.TurnoJpaController;
+import jpaController.UsuarioJpaController;
 
 
 
@@ -37,7 +43,7 @@ public class Empleados extends javax.swing.JPanel {
         cargarEmpleados();
     }
     
-    private void cargarEmpleados(){
+    public void cargarEmpleados(){
         //Cargar los usuarios en la tabla
         controlador_empleado=new EmpleadoJpaController(persis.getEmf());
         empleados=controlador_empleado.findEmpleadoEntities();
@@ -64,7 +70,60 @@ public class Empleados extends javax.swing.JPanel {
         title.setForeground(Color.black);
          txtBuscador.putClientProperty("JTextField.placeholderText","Ingrese el nombre del doctor a buscar");
     }  
-    
+    private void eliminarEmpleadoCompleto(Empleado empleado, DefaultTableModel model, int fila) {
+    try {
+        // Inicializar controladores necesarios
+        TurnoJpaController controladorTurno = new TurnoJpaController(persis.getEmf());
+        UsuarioJpaController controladorUsuario = new UsuarioJpaController(persis.getEmf());
+        
+        // 1. ELIMINAR TURNOS PRIMERO (dependencias del empleado)
+        List<Turno> turnosAEliminar = new ArrayList<>(empleado.getTurnoCollection());
+        for (Turno turno : turnosAEliminar) {
+            controladorTurno.destroy(turno.getIdTurno());
+        }
+        
+        // 2. OBTENER REFERENCIA AL USUARIO ANTES DE ELIMINAR EMPLEADO
+        Usuario usuarioAEliminar = empleado.getIdUsuario();
+        Integer idUsuario = usuarioAEliminar != null ? usuarioAEliminar.getIdUsuario() : null;
+        
+        // 3. ELIMINAR EMPLEADO
+        controlador_empleado.destroy(empleado.getIdEmpleado());
+        
+        // 4. ELIMINAR USUARIO (después del empleado para evitar problemas de FK)
+        if (idUsuario != null) {
+            try {
+                controladorUsuario.destroy(idUsuario);
+            } catch (Exception ex) {
+                // Si hay error al eliminar usuario, informar pero continuar
+                JOptionPane.showMessageDialog(this,
+                    "Empleado eliminado, pero hubo un problema al eliminar el usuario: " + ex.getMessage(),
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            }
+        }
+        
+        // 5. ACTUALIZAR INTERFAZ
+        model.removeRow(fila);
+        
+        JOptionPane.showMessageDialog(this,
+            "Empleado, usuario y turnos eliminados exitosamente",
+            "Eliminación exitosa",
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        // 6. RECARGAR TABLA PARA ASEGURAR CONSISTENCIA
+        cargarEmpleados();
+        
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error durante la eliminación: " + ex.getMessage() + 
+            "\n\nEs posible que algunos datos no se hayan eliminado completamente.",
+            "Error de eliminación",
+            JOptionPane.ERROR_MESSAGE);
+        
+        // Recargar tabla para mostrar el estado actual
+        cargarEmpleados();
+    }
+}
      
 
     /**
@@ -205,12 +264,117 @@ public class Empleados extends javax.swing.JPanel {
 
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
            // TODO add your handling code here:
-     
+               // 1. Verificar que hay una fila seleccionada
+    int filaSeleccionada = emple.getSelectedRow();
+    
+    if (filaSeleccionada < 0) {
+        JOptionPane.showMessageDialog(this,
+            "Debe seleccionar un empleado de la tabla para editar",
+            "Aviso",
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    // 2. Obtener el ID del empleado seleccionado
+    DefaultTableModel model = (DefaultTableModel) emple.getModel();
+    int idEmpleado = (Integer) model.getValueAt(filaSeleccionada, 0);
+    String nombreActual = (String) model.getValueAt(filaSeleccionada, 1);
+    String apellidosActual = (String) model.getValueAt(filaSeleccionada, 2);
+    
+    // 3. Mostrar ventana de confirmación antes de editar
+    int confirmacion = JOptionPane.showConfirmDialog(this,
+        "¿Desea editar la información del empleado?\n\n" +
+        "Empleado actual: " + nombreActual + " " + apellidosActual + "\n" +
+        "ID: " + idEmpleado,
+        "Confirmar edición",
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+    
+    // 4. Si confirma, abrir ventana de edición
+    if (confirmacion == JOptionPane.YES_OPTION) {
+        try {
+            // Buscar el empleado completo en la base de datos
+            Empleado empleadoAEditar = controlador_empleado.findEmpleado(idEmpleado);
+            
+            if (empleadoAEditar != null) {
+                // Crear y mostrar ventana de edición pasando el empleado
+                EditarEmpleado ventanaEditar = new EditarEmpleado(empleadoAEditar, this);
+                MainAdmin.showJpane(ventanaEditar);
+                
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "No se encontró el empleado en la base de datos",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this,
+                "Error al cargar los datos del empleado: " + ex.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
     }//GEN-LAST:event_btnEditarActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-      
-       
+             int filaSeleccionada = emple.getSelectedRow();
+    
+    if (filaSeleccionada < 0) {
+        JOptionPane.showMessageDialog(this, 
+            "Debe seleccionar un empleado de la tabla para eliminar", 
+            "Aviso", 
+            JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+    
+    DefaultTableModel model = (DefaultTableModel) emple.getModel();
+    int idEmpleado = (Integer) model.getValueAt(filaSeleccionada, 0);
+    String nombreEmpleado = (String) model.getValueAt(filaSeleccionada, 1);
+    String apellidosEmpleado = (String) model.getValueAt(filaSeleccionada, 2);
+    
+    try {
+        Empleado empleadoAEliminar = controlador_empleado.findEmpleado(idEmpleado);
+        
+        if (empleadoAEliminar == null) {
+            JOptionPane.showMessageDialog(this,
+                "No se encontró el empleado en la base de datos",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        // Obtener información de los datos relacionados
+        int cantidadTurnos = empleadoAEliminar.getTurnoCollection().size();
+        Usuario usuarioAsociado = empleadoAEliminar.getIdUsuario();
+        String nombreUsuario = usuarioAsociado != null ? usuarioAsociado.getNombreU() : "Sin usuario";
+        
+        String mensaje = "¿Está seguro que desea eliminar al empleado?\n\n" +
+                        "ID: " + idEmpleado + "\n" +
+                        "Nombre: " + nombreEmpleado + " " + apellidosEmpleado + "\n" +
+                        "Usuario: " + nombreUsuario + "\n\n" +
+                        "ADVERTENCIA: Se eliminarán:\n" +
+                        "• " + cantidadTurnos + " turno(s) asociado(s)\n" +
+                        "• 1 usuario del sistema\n" +
+                        "• El registro del empleado\n\n" +
+                        "Esta acción no se puede deshacer.";
+        
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+            mensaje,
+            "Confirmar eliminación completa",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+        
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            eliminarEmpleadoCompleto(empleadoAEliminar, model, filaSeleccionada);
+        }
+        
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(this,
+            "Error al procesar la eliminación: " + ex.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE);
+    }
             
     }//GEN-LAST:event_btnBorrarActionPerformed
 
@@ -222,7 +386,50 @@ public class Empleados extends javax.swing.JPanel {
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+        String textoBusqueda = txtBuscador.getText().trim();
+    
+    if (textoBusqueda.isEmpty()) {
+        // Si no hay texto, mostrar todos los empleados
+        cargarEmpleados();
+        return;
+    }
+    
+    // Filtrar empleados que coincidan con la búsqueda
+    DefaultTableModel model = (DefaultTableModel) emple.getModel();
+    model.setRowCount(0);
+    
+    List<Empleado> empleadosFiltrados = empleados.stream()
+        .filter(emp -> 
+            emp.getNombre().toLowerCase().contains(textoBusqueda.toLowerCase()) ||
+            emp.getApellidos().toLowerCase().contains(textoBusqueda.toLowerCase()) ||
+            String.valueOf(emp.getIdEmpleado()).contains(textoBusqueda)
+        )
+        .collect(Collectors.toList());
+    
+    if (empleadosFiltrados.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+            "No se encontraron empleados que coincidan con: " + textoBusqueda,
+            "Sin resultados",
+            JOptionPane.INFORMATION_MESSAGE);
+        cargarEmpleados(); // Volver a mostrar todos
+        return;
+    }
+    
+    // Mostrar empleados filtrados
+    empleadosFiltrados.forEach(emplead -> {
+        String turno = emplead.getTurnoCollection().stream()
+            .map(tur -> tur.getIdTurnoTipo().getDescripcion())
+            .collect(Collectors.joining(", "));
         
+        model.addRow(new Object[]{
+            emplead.getIdEmpleado(),
+            emplead.getNombre(),
+            emplead.getApellidos(),
+            turno,
+            emplead.getIdUsuario().getIdRol().getIdRol(),
+            emplead.getIdUsuario().getContrasena()
+        });
+    });
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtBuscadorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBuscadorActionPerformed

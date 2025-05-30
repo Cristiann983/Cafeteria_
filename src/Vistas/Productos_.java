@@ -1,0 +1,336 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
+ */
+package Vistas;
+
+import entity.EnumStatus;
+import entity.Pedido;
+import entity.Pedidoproducto;
+import entity.Persistencia;
+import entity.Producto;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+import jpaController.EnumStatusJpaController;
+import jpaController.PedidoJpaController;
+import jpaController.PedidoproductoJpaController;
+import jpaController.ProductoJpaController;
+
+/**
+ *
+ * @author crist
+ */
+public class Productos_ extends javax.swing.JPanel {
+        private Persistencia pers;
+        private ProductoJpaController  controladorP;
+        private PedidoJpaController controladorPedido;
+        private PedidoproductoJpaController controladorPedidoProducto;
+        private EnumStatusJpaController controladorStatus;
+        private boolean pedidoCreado = false;
+        private Pedido pedidoActual;
+        private List<Pedidoproducto> productosEnCarrito;
+        
+        private JScrollPane scrollPane;
+    /**
+     * Creates new form Productos_
+     */
+    public Productos_() {
+        initComponents();
+        pers= new Persistencia();
+        controladorP= new ProductoJpaController(pers.getEmf());
+        controladorPedido = new PedidoJpaController(pers.getEmf());
+        controladorPedidoProducto = new PedidoproductoJpaController(pers.getEmf());
+        controladorStatus = new EnumStatusJpaController(pers.getEmf());
+        
+        productosEnCarrito = new ArrayList<>();
+     
+
+        ContentPanel.setLayout(new GridLayout(0, 6, 20, 20));
+        ContentPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        scrollPane = new JScrollPane(ContentPanel);
+           add(scrollPane, BorderLayout.CENTER);
+            configurarBotonesIniciales();
+        cargarProductos();
+
+    }
+    public void configurarBotonesIniciales(){
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        
+    }
+     // Método para agregar producto al carrito (llamado desde ProductoPanel)
+    public void agregarProductoAlCarrito(Producto producto) {
+        if (!pedidoCreado || pedidoActual == null) {
+            JOptionPane.showMessageDialog(this, "Debe crear un pedido antes de agregar productos");
+            return;
+        }
+        
+        // Buscar si el producto ya está en el carrito
+        Pedidoproducto productoExistente = null;
+        for (Pedidoproducto pp : productosEnCarrito) {
+            if (pp.getIdProducto().getIdProducto().equals(producto.getIdProducto())) {
+                productoExistente = pp;
+                break;
+            }
+        }
+        
+        if (productoExistente != null) {
+            // Si ya existe, aumentar cantidad
+            productoExistente.setCantidad(productoExistente.getCantidad() + 1);
+            JOptionPane.showMessageDialog(this, "Cantidad actualizada: " + productoExistente.getCantidad());
+        } else {
+            // Si no existe, crear nuevo
+            Pedidoproducto nuevoPedidoProducto = new Pedidoproducto();
+            nuevoPedidoProducto.setIdPedido(pedidoActual);
+            nuevoPedidoProducto.setIdProducto(producto);
+            nuevoPedidoProducto.setCantidad(1);
+            
+            productosEnCarrito.add(nuevoPedidoProducto);
+            JOptionPane.showMessageDialog(this, "Producto agregado al carrito");
+        }
+    }
+    public static ImageIcon byteArrayToImageIcon(byte[] bytes) {
+    try {
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes));
+        return new ImageIcon(img);
+    } catch (Exception e) {
+        return null;
+    }
+    }
+    public void cargarProductos() {
+    ContentPanel.removeAll();
+    List<Producto> productos = controladorP.findProductoEntities();
+    for (Producto p : productos) {
+        ProductoPanel panel = new ProductoPanel(p, this, pedidoCreado);
+        ContentPanel.add(panel);
+    }
+    ContentPanel.revalidate();
+    ContentPanel.repaint();
+}
+    
+
+    
+    
+          
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        ContentPanel = new javax.swing.JPanel();
+        btnCancelar = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
+
+        javax.swing.GroupLayout ContentPanelLayout = new javax.swing.GroupLayout(ContentPanel);
+        ContentPanel.setLayout(ContentPanelLayout);
+        ContentPanelLayout.setHorizontalGroup(
+            ContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        ContentPanelLayout.setVerticalGroup(
+            ContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 273, Short.MAX_VALUE)
+        );
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnAgregar.setText("Agregar pedido");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(ContentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(224, 224, 224)
+                .addComponent(btnCancelar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAgregar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnGuardar)
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(ContentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCancelar)
+                    .addComponent(btnAgregar)
+                    .addComponent(btnGuardar))
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        // TODO add your handling code here:
+        if (pedidoCreado) {
+            int respuesta = JOptionPane.showConfirmDialog(this, 
+                "¿Está seguro de cancelar el pedido?", 
+                "Confirmar cancelación", 
+                JOptionPane.YES_NO_OPTION);
+            
+            if (respuesta == JOptionPane.YES_OPTION) {
+                try {
+                    // Si el pedido ya fue guardado en BD, eliminarlo
+                    if (pedidoActual.getIdPedido() != null) {
+                        controladorPedido.destroy(pedidoActual.getIdPedido());
+                    }
+                    
+                    // Resetear estado
+                    pedidoActual = null;
+                    pedidoCreado = false;
+                    productosEnCarrito.clear();
+                    
+                    // Restaurar botones
+                    btnAgregar.setEnabled(true);
+                    btnGuardar.setEnabled(false);
+                    btnCancelar.setEnabled(false);
+                    btnAgregar.setText("Crear Pedido");
+                    
+                    // Recargar productos
+                    cargarProductos();
+                    
+                    JOptionPane.showMessageDialog(this, "Pedido cancelado exitosamente");
+                    
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Error al cancelar pedido: " + ex.getMessage());
+                }
+            }
+        }
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        // TODO add your handling code here:
+        if (!pedidoCreado || productosEnCarrito.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay productos en el carrito para guardar");
+            return;
+        }
+        
+        try {
+            // Guardar todos los productos del carrito en la base de datos
+            for (Pedidoproducto pp : productosEnCarrito) {
+                controladorPedidoProducto.create(pp);
+            }
+            
+            JOptionPane.showMessageDialog(this, "Pedido guardado exitosamente\n" +
+                "Productos guardados: " + productosEnCarrito.size());
+            
+            // Resetear estado después de guardar
+            pedidoActual = null;
+            pedidoCreado = false;
+            productosEnCarrito.clear();
+            
+            // Restaurar botones
+            btnAgregar.setEnabled(true);
+            btnGuardar.setEnabled(false);
+            btnCancelar.setEnabled(false);
+            btnAgregar.setText("Crear Pedido");
+            
+            // Recargar productos
+            cargarProductos();
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al guardar pedido: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        // TODO add your handling code here:
+        try {
+            String mesaStr = JOptionPane.showInputDialog(this, "Ingrese el número de mesa:");
+            if (mesaStr == null || mesaStr.trim().isEmpty()) {
+                return;
+            }
+            
+            int mesa = Integer.parseInt(mesaStr);
+            
+            // Crear nuevo pedido
+            pedidoActual = new Pedido();
+            pedidoActual.setMesa(mesa);
+            pedidoActual.setFecha(new Date());
+            
+            // Obtener status 
+            EnumStatus statusPendiente = controladorStatus.findEnumStatus(2);
+            if (statusPendiente == null) {
+                JOptionPane.showMessageDialog(this, "Error: No se encontró el status 'Pendiente'");
+                return;
+            }
+            pedidoActual.setIdStatus(statusPendiente);
+            
+            // Guardar el pedido en la base de datos
+            controladorPedido.create(pedidoActual);
+            
+            pedidoCreado = true;
+            productosEnCarrito.clear();
+            
+            // Actualizar estado de botones
+            btnAgregar.setEnabled(false);
+            btnGuardar.setEnabled(true);
+            btnCancelar.setEnabled(true);
+            btnAgregar.setText("Pedido Creado");
+            
+            // Recargar productos para habilitar botones "Agregar al carrito"
+            cargarProductos();
+            
+            JOptionPane.showMessageDialog(this, "Pedido creado exitosamente\nMesa: " + mesa);
+            
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese un número válido para la mesa");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error al crear pedido: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ContentPanel;
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnGuardar;
+    // End of variables declaration//GEN-END:variables
+}

@@ -324,15 +324,14 @@ public class Login extends javax.swing.JFrame {
     public void ventanaAdmin(){
         // Login exitoso
                
-       Main pri= new Main();
+       MainAdmin pri= new MainAdmin();
        pri.setVisible(true);
        this.dispose();
     }
     public void ventanaEmpleado(){
-        JOptionPane.showMessageDialog(this, 
-                    "Bienvenido, " + user.getNombreU(),
-                    "Login exitoso", 
-                    JOptionPane.INFORMATION_MESSAGE);
+        MainEmpeados pri= new MainEmpeados();
+       pri.setVisible(true);
+       this.dispose();
     }
     
     private void userTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_userTxtActionPerformed

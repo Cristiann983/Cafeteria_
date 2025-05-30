@@ -244,17 +244,18 @@ public class agregarProductos extends javax.swing.JPanel {
                     .addGroup(panelCentroLayout.createSequentialGroup()
                         .addGap(168, 168, 168)
                         .addComponent(btnAgregarP)))
-                .addContainerGap())
+                .addGap(103, 109, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCentroLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnCancelar)
-                .addGap(55, 55, 55))
+                .addGap(37, 37, 37))
         );
         panelCentroLayout.setVerticalGroup(
             panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCentroLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(39, 39, 39)
                 .addComponent(btnCancelar)
-                .addGap(52, 52, 52)
+                .addGap(48, 48, 48)
                 .addComponent(jLabel1)
                 .addGap(54, 54, 54)
                 .addGroup(panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -602,6 +603,8 @@ public class agregarProductos extends javax.swing.JPanel {
 
         try {
             guardarReceta(descripcion);
+            llenarComboReceta();
+            llenarComboReceta2();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al guardar la receta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
