@@ -421,9 +421,35 @@ public class Carrito extends javax.swing.JPanel {
 
     }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         String idPedidoStr = (String) comboPedido.getSelectedItem();
+    if (idPedidoStr == null || idPedidoStr.equals("No hay pedidos")) {
+        JOptionPane.showMessageDialog(null, "Selecciona un pedido válido.");
+        return;
+    }
 
-        limpiarVista();
+    try {
+        int idPedido = Integer.parseInt(idPedidoStr);
 
+   
+        Pedido pedido = jpaPedido.findPedido(idPedido);
+        if (pedido != null) {
+            
+            EnumStatus status = jpaStatus.findEnumStatus(3);
+            pedido.setIdStatus(status);
+
+            jpaPedido.edit(pedido);
+            comboPedido.removeItem(comboPedido.getSelectedItem());
+            JOptionPane.showMessageDialog(null, "Estado del pedido actualizado correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Pedido no encontrado.");
+        }
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "El ID del pedido no es válido.");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al actualizar el pedido: " + e.getMessage());
+    }
+
+    limpiarVista();
     }//GEN-LAST:event_jButton1ActionPerformed
 
 
