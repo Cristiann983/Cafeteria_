@@ -6,7 +6,6 @@ package Vistas;
 
 import entity.EnumStatus;
 import entity.Factura;
-import static entity.Factura_.idPedido;
 import entity.Insumo;
 import entity.Pedido;
 import entity.Pedidoproducto;
