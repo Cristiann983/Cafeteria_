@@ -12,7 +12,9 @@ import entity.Pedidoproducto;
 import entity.Persistencia;
 import entity.Producto;
 import entity.Recetainsumo;
+import entity.Venta;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,13 +28,14 @@ import jpaController.PedidoJpaController;
 import jpaController.PedidoproductoJpaController;
 import jpaController.ProductoJpaController;
 import jpaController.RecetainsumoJpaController;
+import jpaController.VentaJpaController;
 
 /**
  *
  * @author juanm
  */
 public class VistaFactura extends javax.swing.JPanel {
-
+    private VentaJpaController jpaVenta;
     private Integer pedidoSeleccionado = null;
     private double totales;
     private final FacturaJpaController jpaFactura;
@@ -58,7 +61,7 @@ public class VistaFactura extends javax.swing.JPanel {
         jparecetai = new RecetainsumoJpaController(emf);
         jpaestatus = new EnumStatusJpaController(emf);
         jpapedidop = new PedidoproductoJpaController(emf);
-
+        jpaVenta=new VentaJpaController(emf);
     }
 
     public void setTotalAPagar(double total) {
@@ -214,6 +217,14 @@ public class VistaFactura extends javax.swing.JPanel {
                 break;
             }
         }
+        List<Venta> ventas = jpaVenta.findVentaEntities();
+        for (int i = 0; i < ventas.size(); i++) {
+            if (ventas.get(i).getIdPedio().getIdPedido()== pedidoSeleccionado) {
+                existeFactura = true;
+                break;
+            }
+        }
+        
 
         if (existeFactura) {
             JOptionPane.showMessageDialog(this, "Ya existe una factura para este pedido.");
@@ -229,7 +240,12 @@ public class VistaFactura extends javax.swing.JPanel {
             nuevaFactura.setMonto((long) totales);
 
             jpaFactura.create(nuevaFactura);
-
+           
+            Venta nuevaVenta = new Venta();
+            nuevaVenta.setIdPedio(pedido);
+            nuevaVenta.setTotal(BigDecimal.valueOf(totales));
+            nuevaVenta.setIdpedido(pedidoSeleccionado);
+            jpaVenta.create(nuevaVenta);
             java.awt.Window ventana = javax.swing.SwingUtilities.getWindowAncestor(this);
             if (ventana != null) {
                 ventana.dispose();
@@ -305,7 +321,11 @@ public class VistaFactura extends javax.swing.JPanel {
             EnumStatus status = jpaestatus.findEnumStatus(3);
             pedido.setIdStatus(status);
             jpapedido.edit(pedido);
-
+            Venta nuevaVenta = new Venta();
+            nuevaVenta.setIdPedio(pedido);
+            nuevaVenta.setTotal(BigDecimal.valueOf(totales));
+            nuevaVenta.setIdpedido(pedidoSeleccionado);
+            jpaVenta.create(nuevaVenta);
             JOptionPane.showMessageDialog(null, "Pedido finalizado y stock actualizado correctamente.");
 
         } catch (Exception e) {

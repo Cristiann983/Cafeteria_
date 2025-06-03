@@ -45,7 +45,7 @@ public class Carrito extends javax.swing.JPanel {
     private EnumStatusJpaController jpaStatus;
     private PedidoproductoJpaController jpaPedidoProducto;
     private DefaultTableModel tabla;
-    private final String[] columnas = {"Id Pedido", "Producto", "Cantidad", "Estatus"};
+    private final String[] columnas = {"Id Pedido","Id Mesa", "Producto", "Cantidad", "Precio" , "Estatus"};
 
     /**
      * Creates new form Carrito
@@ -115,20 +115,27 @@ public class Carrito extends javax.swing.JPanel {
         txtTotal.setText(String.format("$%.2f", total));
     }
 
-    private void cargarProductosEnTabla(int idPedido) {
-        tabla.setRowCount(0);
+   private void cargarProductosEnTabla(int idPedido) {
+    tabla.setRowCount(0);
 
-        for (Pedidoproducto pp : jpaPedidoProducto.findPedidoproductoEntities()) {
-            if (pp.getIdPedido().getIdPedido() == idPedido) {
-                tabla.addRow(new Object[]{
-                    idPedido,
-                    pp.getIdProducto().getDescripcion(),
-                    pp.getCantidad(),
-                    pp.getIdPedido().getIdStatus().getDescripcion()
-                });
-            }
+    for (Pedidoproducto pp : jpaPedidoProducto.findPedidoproductoEntities()) {
+        if (pp.getIdPedido().getIdPedido() == idPedido) {
+            int cantidad = pp.getCantidad();
+            double precioUnitario = pp.getIdProducto().getPrecio();
+            double precioTotal = cantidad * precioUnitario;
+
+            tabla.addRow(new Object[] {
+                idPedido,
+                pp.getIdPedido().getMesa(),
+                pp.getIdProducto().getDescripcion(),
+                cantidad,
+                precioTotal, 
+                pp.getIdPedido().getIdStatus().getDescripcion()
+            });
         }
     }
+}
+
 
     private void procesarPedidoSeleccionado() {
         String idPedidoStr = (String) comboPedido.getSelectedItem();
