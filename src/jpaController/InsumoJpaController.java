@@ -4,24 +4,25 @@
  */
 package jpaController;
 
-import Clases_Tabla.exceptions.IllegalOrphanException;
-import Clases_Tabla.exceptions.NonexistentEntityException;
 import entity.Insumo;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import entity.Tipocantidad;
 import entity.Recetainsumo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import jpaController.exceptions.IllegalOrphanException;
+import jpaController.exceptions.NonexistentEntityException;
 
 /**
  *
- * @author juanm
+ * @author crist
  */
 public class InsumoJpaController implements Serializable {
 
@@ -42,6 +43,11 @@ public class InsumoJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            Tipocantidad idTipocantidad = insumo.getIdTipocantidad();
+            if (idTipocantidad != null) {
+                idTipocantidad = em.getReference(idTipocantidad.getClass(), idTipocantidad.getIdTipo());
+                insumo.setIdTipocantidad(idTipocantidad);
+            }
             Collection<Recetainsumo> attachedRecetainsumoCollection = new ArrayList<Recetainsumo>();
             for (Recetainsumo recetainsumoCollectionRecetainsumoToAttach : insumo.getRecetainsumoCollection()) {
                 recetainsumoCollectionRecetainsumoToAttach = em.getReference(recetainsumoCollectionRecetainsumoToAttach.getClass(), recetainsumoCollectionRecetainsumoToAttach.getRecetainsumoPK());
@@ -49,6 +55,10 @@ public class InsumoJpaController implements Serializable {
             }
             insumo.setRecetainsumoCollection(attachedRecetainsumoCollection);
             em.persist(insumo);
+            if (idTipocantidad != null) {
+                idTipocantidad.getInsumoCollection().add(insumo);
+                idTipocantidad = em.merge(idTipocantidad);
+            }
             for (Recetainsumo recetainsumoCollectionRecetainsumo : insumo.getRecetainsumoCollection()) {
                 Insumo oldInsumoOfRecetainsumoCollectionRecetainsumo = recetainsumoCollectionRecetainsumo.getInsumo();
                 recetainsumoCollectionRecetainsumo.setInsumo(insumo);
@@ -72,6 +82,8 @@ public class InsumoJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Insumo persistentInsumo = em.find(Insumo.class, insumo.getIdInsumo());
+            Tipocantidad idTipocantidadOld = persistentInsumo.getIdTipocantidad();
+            Tipocantidad idTipocantidadNew = insumo.getIdTipocantidad();
             Collection<Recetainsumo> recetainsumoCollectionOld = persistentInsumo.getRecetainsumoCollection();
             Collection<Recetainsumo> recetainsumoCollectionNew = insumo.getRecetainsumoCollection();
             List<String> illegalOrphanMessages = null;
@@ -86,6 +98,10 @@ public class InsumoJpaController implements Serializable {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            if (idTipocantidadNew != null) {
+                idTipocantidadNew = em.getReference(idTipocantidadNew.getClass(), idTipocantidadNew.getIdTipo());
+                insumo.setIdTipocantidad(idTipocantidadNew);
+            }
             Collection<Recetainsumo> attachedRecetainsumoCollectionNew = new ArrayList<Recetainsumo>();
             for (Recetainsumo recetainsumoCollectionNewRecetainsumoToAttach : recetainsumoCollectionNew) {
                 recetainsumoCollectionNewRecetainsumoToAttach = em.getReference(recetainsumoCollectionNewRecetainsumoToAttach.getClass(), recetainsumoCollectionNewRecetainsumoToAttach.getRecetainsumoPK());
@@ -94,6 +110,14 @@ public class InsumoJpaController implements Serializable {
             recetainsumoCollectionNew = attachedRecetainsumoCollectionNew;
             insumo.setRecetainsumoCollection(recetainsumoCollectionNew);
             insumo = em.merge(insumo);
+            if (idTipocantidadOld != null && !idTipocantidadOld.equals(idTipocantidadNew)) {
+                idTipocantidadOld.getInsumoCollection().remove(insumo);
+                idTipocantidadOld = em.merge(idTipocantidadOld);
+            }
+            if (idTipocantidadNew != null && !idTipocantidadNew.equals(idTipocantidadOld)) {
+                idTipocantidadNew.getInsumoCollection().add(insumo);
+                idTipocantidadNew = em.merge(idTipocantidadNew);
+            }
             for (Recetainsumo recetainsumoCollectionNewRecetainsumo : recetainsumoCollectionNew) {
                 if (!recetainsumoCollectionOld.contains(recetainsumoCollectionNewRecetainsumo)) {
                     Insumo oldInsumoOfRecetainsumoCollectionNewRecetainsumo = recetainsumoCollectionNewRecetainsumo.getInsumo();
@@ -144,6 +168,11 @@ public class InsumoJpaController implements Serializable {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Tipocantidad idTipocantidad = insumo.getIdTipocantidad();
+            if (idTipocantidad != null) {
+                idTipocantidad.getInsumoCollection().remove(insumo);
+                idTipocantidad = em.merge(idTipocantidad);
             }
             em.remove(insumo);
             em.getTransaction().commit();
