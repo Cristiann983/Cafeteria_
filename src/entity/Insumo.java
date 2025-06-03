@@ -5,6 +5,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -13,6 +14,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -31,6 +34,13 @@ import javax.persistence.Table;
     @NamedQuery(name = "Insumo.findByDescripcion", query = "SELECT i FROM Insumo i WHERE i.descripcion = :descripcion"),
     @NamedQuery(name = "Insumo.findByCantidad", query = "SELECT i FROM Insumo i WHERE i.cantidad = :cantidad")})
 public class Insumo implements Serializable {
+
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "precio_u")
+    private BigDecimal precioU;
+    @JoinColumn(name = "id_tipocantidad", referencedColumnName = "id_tipo")
+    @ManyToOne
+    private Tipocantidad idTipocantidad;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -125,6 +135,22 @@ public class Insumo implements Serializable {
     @Override
     public String toString() {
         return "entity.Insumo[ idInsumo=" + idInsumo + " ]";
+    }
+
+    public BigDecimal getPrecioU() {
+        return precioU;
+    }
+
+    public void setPrecioU(BigDecimal precioU) {
+        this.precioU = precioU;
+    }
+
+    public Tipocantidad getIdTipocantidad() {
+        return idTipocantidad;
+    }
+
+    public void setIdTipocantidad(Tipocantidad idTipocantidad) {
+        this.idTipocantidad = idTipocantidad;
     }
     
 }

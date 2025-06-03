@@ -36,6 +36,9 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Pedido.findByFecha", query = "SELECT p FROM Pedido p WHERE p.fecha = :fecha")})
 public class Pedido implements Serializable {
 
+    @OneToMany(mappedBy = "idPedio")
+    private Collection<Venta> ventaCollection;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -141,6 +144,14 @@ public class Pedido implements Serializable {
     @Override
     public String toString() {
         return "entity.Pedido[ idPedido=" + idPedido + " ]";
+    }
+
+    public Collection<Venta> getVentaCollection() {
+        return ventaCollection;
+    }
+
+    public void setVentaCollection(Collection<Venta> ventaCollection) {
+        this.ventaCollection = ventaCollection;
     }
     
 }

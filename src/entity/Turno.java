@@ -32,6 +32,10 @@ import javax.persistence.TemporalType;
     @NamedQuery(name = "Turno.findByFecha", query = "SELECT t FROM Turno t WHERE t.fecha = :fecha")})
 public class Turno implements Serializable {
 
+    @JoinColumn(name = "idEncargado", referencedColumnName = "idEmpleado")
+    @ManyToOne
+    private Empleado idEncargado;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -116,6 +120,14 @@ public class Turno implements Serializable {
     @Override
     public String toString() {
         return "entity.Turno[ idTurno=" + idTurno + " ]";
+    }
+
+    public Empleado getIdEncargado() {
+        return idEncargado;
+    }
+
+    public void setIdEncargado(Empleado idEncargado) {
+        this.idEncargado = idEncargado;
     }
     
 }
