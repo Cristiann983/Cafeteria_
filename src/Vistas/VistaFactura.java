@@ -232,7 +232,7 @@ public class VistaFactura extends javax.swing.JPanel {
         }
 
         try {
-            actualizarStockYPedido();
+            //actualizarStockYPedido();
 
             Factura nuevaFactura = new Factura();
             nuevaFactura.setFecha(new Date());
