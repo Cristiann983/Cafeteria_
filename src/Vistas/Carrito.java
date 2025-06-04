@@ -45,8 +45,8 @@ public class Carrito extends javax.swing.JPanel {
     private EnumStatusJpaController jpaStatus;
     private PedidoproductoJpaController jpaPedidoProducto;
     private DefaultTableModel tabla;
-    private final String[] columnas = {"Id Pedido","Id Mesa", "Producto", "Cantidad", "Precio" , "Estatus De Mesa"};
-    
+    private final String[] columnas = {"Id Pedido","Id Mesa", "Producto", "Cantidad", "Precio" , "Estatus"};
+
     /**
      * Creates new form Carrito
      */
