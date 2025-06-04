@@ -8,7 +8,9 @@ import entity.Insumo;
 import entity.Persistencia;
 import entity.Producto;
 import entity.Receta;
+import entity.Tipocantidad;
 import java.awt.Color;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
@@ -21,6 +23,7 @@ import javax.swing.table.DefaultTableModel;
 import jpaController.InsumoJpaController;
 import jpaController.ProductoJpaController;
 import jpaController.RecetaJpaController;
+import jpaController.TipocantidadJpaController;
 
 /**
  *
@@ -32,6 +35,9 @@ public class agregarInsumos extends javax.swing.JPanel {
 
     private Insumo insumo;
     private InsumoJpaController jpaInsumo;
+    private Tipocantidad cantidad;
+    private TipocantidadJpaController jpaUnidad;
+
     private List<Insumo> insumos;
     private int idSeleccionado = -1; // verificar que este selccionado alguno
 
@@ -44,7 +50,10 @@ public class agregarInsumos extends javax.swing.JPanel {
         EntityManagerFactory emf = persis.getEmf();
         jpaInsumo = new InsumoJpaController(emf);
         insumo = new Insumo();
+        jpaUnidad = new TipocantidadJpaController(emf);
+        cantidad = new Tipocantidad();
         cargarInsumos();
+        llenarComboUnidad();
     }
 
     /**
@@ -65,10 +74,14 @@ public class agregarInsumos extends javax.swing.JPanel {
         txtCantidad = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaInsumos = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
+        comboUnidad = new javax.swing.JComboBox<>();
+        jLabel8 = new javax.swing.JLabel();
+        txtPrecio = new javax.swing.JTextField();
         panerlSur = new javax.swing.JPanel();
         btnCancelar = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         panelNorte = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -83,20 +96,20 @@ public class agregarInsumos extends javax.swing.JPanel {
         panelCentro.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel2.setText("Nombre ");
-        panelCentro.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 40, 73, -1));
+        panelCentro.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 73, -1));
 
         jLabel3.setText("Descripccion");
-        panelCentro.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 80, 73, -1));
+        panelCentro.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 60, 73, -1));
 
-        jLabel6.setText("Cantidad");
-        panelCentro.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, 73, -1));
+        jLabel6.setText("Precio");
+        panelCentro.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 150, 73, -1));
 
         txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txtNombreKeyTyped(evt);
             }
         });
-        panelCentro.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 40, 124, -1));
+        panelCentro.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 30, 124, -1));
 
         txtDescripccion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -108,7 +121,7 @@ public class agregarInsumos extends javax.swing.JPanel {
                 txtDescripccionKeyTyped(evt);
             }
         });
-        panelCentro.add(txtDescripccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 80, 124, 20));
+        panelCentro.add(txtDescripccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 60, 124, 20));
 
         txtCantidad.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -120,17 +133,17 @@ public class agregarInsumos extends javax.swing.JPanel {
                 txtCantidadKeyTyped(evt);
             }
         });
-        panelCentro.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 110, 124, -1));
+        panelCentro.add(txtCantidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 90, 124, -1));
 
         tablaInsumos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "Nombre ", "Descripcion", "Cantidad"
+                "ID", "Nombre ", "Descripcion", "Cantidad", "Unidad", "Precio"
             }
         ));
         tablaInsumos.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -140,7 +153,28 @@ public class agregarInsumos extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablaInsumos);
 
-        panelCentro.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 180, 630, 140));
+        panelCentro.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 630, 140));
+
+        jLabel7.setText("Cantidad");
+        panelCentro.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, 73, -1));
+
+        comboUnidad.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        panelCentro.add(comboUnidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 120, 130, -1));
+
+        jLabel8.setText("Unidad");
+        panelCentro.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 120, 73, -1));
+
+        txtPrecio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioActionPerformed(evt);
+            }
+        });
+        txtPrecio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPrecioKeyTyped(evt);
+            }
+        });
+        panelCentro.add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 150, 130, -1));
 
         panerlSur.setBackground(new java.awt.Color(132, 85, 83));
         panerlSur.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -161,13 +195,13 @@ public class agregarInsumos extends javax.swing.JPanel {
         });
         panerlSur.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, -1, -1));
 
-        jButton1.setText("Editar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnEditarActionPerformed(evt);
             }
         });
-        panerlSur.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, -1, -1));
+        panerlSur.add(btnEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 0, -1, -1));
 
         panelNorte.setBackground(new java.awt.Color(202, 167, 145));
 
@@ -185,22 +219,25 @@ public class agregarInsumos extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                .addComponent(panelNorte, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(panerlSur, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-    public void guardarInsumo(String nombre, String descripcion, int cantidad) {
+    public void guardarInsumo(String nombre, String descripcion, int cantidad, Tipocantidad unidad, BigDecimal precio) {
         try {
             Insumo insumo = new Insumo();
             insumo.setNombre(nombre);
             insumo.setDescripcion(descripcion);
             insumo.setCantidad(cantidad);
+            insumo.setIdTipocantidad(unidad);
+            insumo.setPrecioU(precio);
             jpaInsumo.create(insumo);
             JOptionPane.showMessageDialog(null, "Insumo guardado con éxito");
             cargarInsumos();
+            llenarComboUnidad();
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al guardar Empleado: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -220,8 +257,22 @@ public class agregarInsumos extends javax.swing.JPanel {
                 insumo.getIdInsumo(),
                 insumo.getNombre(),
                 insumo.getDescripcion(),
-                insumo.getCantidad()
+                insumo.getCantidad(),
+                insumo.getIdTipocantidad().getNombre(),
+                insumo.getPrecioU()
             });
+        }
+    }
+
+    public void llenarComboUnidad() {
+        try {
+            List<Tipocantidad> listUnidad = jpaUnidad.findTipocantidadEntities();
+            comboUnidad.removeAllItems();
+            for (Tipocantidad unidadd : listUnidad) {
+                comboUnidad.addItem(unidadd.getNombre());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al llenar Datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -230,16 +281,20 @@ public class agregarInsumos extends javax.swing.JPanel {
         txtDescripccion.setText("");
         txtCantidad.setText("");
         idSeleccionado = -1; // Reinicia el ID seleccionado si estás en modo edición
+        txtPrecio.setText("");
     }
 
-    public void editarInsumo(int id, String nombre, String descripcion, int cantidad) {
+    public void editarInsumo(int id, String nombre, String descripcion, int cantidad, Tipocantidad unidad, BigDecimal precio) {
         try {
             Insumo insumo = jpaInsumo.findInsumo(id);
             if (insumo != null) {
                 insumo.setNombre(nombre);
                 insumo.setDescripcion(descripcion);
                 insumo.setCantidad(cantidad);
+                insumo.setIdTipocantidad(unidad); // Actualiza la unidad
+                insumo.setPrecioU(precio);
                 jpaInsumo.edit(insumo);
+
                 JOptionPane.showMessageDialog(null, "Insumo editado con éxito");
                 cargarInsumos();
             } else {
@@ -256,30 +311,87 @@ public class agregarInsumos extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        String nombre = txtNombre.getText();
-        String descripcion = txtDescripccion.getText();
-        String cantidadTexto = txtCantidad.getText();
+        String nombre = txtNombre.getText().trim();
+        String descripcion = txtDescripccion.getText().trim();
+        String cantidadTexto = txtCantidad.getText().trim();
+        String precioTexto = txtPrecio.getText().trim();  // nuevo campo precio
+        String unidadNombre = (String) comboUnidad.getSelectedItem();
 
-        if (nombre.isEmpty() || descripcion.isEmpty() || cantidadTexto.isEmpty()) {
+        // Validar campos vacíos
+        if (nombre.isEmpty() || descripcion.isEmpty() || cantidadTexto.isEmpty() || precioTexto.isEmpty() || unidadNombre == null || unidadNombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Validar que la cantidad sea un número entero positivo
         int cantidad;
         try {
             cantidad = Integer.parseInt(cantidadTexto);
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor que cero.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "La cantidad debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        guardarInsumo(nombre, descripcion, cantidad);
+        // Validar que el precio sea un número decimal positivo (BigDecimal)
+        BigDecimal precio;
+        try {
+            precio = new BigDecimal(precioTexto);
+            if (precio.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this, "El precio debe ser mayor que cero.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El precio debe ser un número decimal válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Buscar el objeto TipoCantidad correspondiente al nombre seleccionado
+        Tipocantidad unidadSeleccionada = null;
+        try {
+            List<Tipocantidad> listaUnidades = jpaUnidad.findTipocantidadEntities();
+            for (Tipocantidad tipo : listaUnidades) {
+                if (tipo.getNombre().equals(unidadNombre)) {
+                    unidadSeleccionada = tipo;
+                    break;
+                }
+            }
+
+            if (unidadSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Unidad seleccionada no válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al buscar unidad: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validar que no exista un insumo con el mismo nombre
+        try {
+            List<Insumo> listaInsumos = jpaInsumo.findInsumoEntities();
+            for (Insumo insumoExistente : listaInsumos) {
+                if (insumoExistente.getNombre().trim().equalsIgnoreCase(nombre)) {
+                    JOptionPane.showMessageDialog(this, "Ya existe un insumo con ese nombre.", "Duplicado", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al validar insumo existente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Guardar insumo (con la unidad y precio)
+        guardarInsumo(nombre, descripcion, cantidad, unidadSeleccionada, precio);
 
         // Limpiar campos
         txtNombre.setText("");
         txtDescripccion.setText("");
         txtCantidad.setText("");
-
+        txtPrecio.setText("");  // limpiar campo precio
+        comboUnidad.setSelectedIndex(0);
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void txtCantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCantidadActionPerformed
@@ -331,51 +443,136 @@ public class agregarInsumos extends javax.swing.JPanel {
             txtNombre.setText(tablaInsumos.getValueAt(fila, 1).toString());
             txtDescripccion.setText(tablaInsumos.getValueAt(fila, 2).toString());
             txtCantidad.setText(tablaInsumos.getValueAt(fila, 3).toString());
-            idSeleccionado = (int) tablaInsumos.getValueAt(fila, 0); // Guarda el ID para editar
-        }
 
+            Object valorId = tablaInsumos.getValueAt(fila, 0);
+            if (valorId instanceof Integer) {
+                idSeleccionado = (Integer) valorId;
+            } else {
+                idSeleccionado = Integer.parseInt(valorId.toString());
+            }
+
+            String unidadNombre = tablaInsumos.getValueAt(fila, 4).toString();
+
+            for (int i = 0; i < comboUnidad.getItemCount(); i++) {
+                if (comboUnidad.getItemAt(i).equals(unidadNombre)) {
+                    comboUnidad.setSelectedIndex(i);
+                    break;
+                }
+            }
+
+            // Aquí se agrega la parte del precio:
+            Object valorPrecio = tablaInsumos.getValueAt(fila, 5); // Asumiendo que la columna 5 es el precio
+            if (valorPrecio != null) {
+                txtPrecio.setText(valorPrecio.toString());
+            } else {
+                txtPrecio.setText("");
+            }
+        }
     }//GEN-LAST:event_tablaInsumosMouseClicked
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
         // TODO add your handling code here:
-        String nombre = txtNombre.getText();
-        String descripcion = txtDescripccion.getText();
-        String cantidadTexto = txtCantidad.getText();
+        String nombre = txtNombre.getText().trim();
+        String descripcion = txtDescripccion.getText().trim();
+        String cantidadTexto = txtCantidad.getText().trim();
+        String precioTexto = txtPrecio.getText().trim();  // 
+        String unidadNombre = (String) comboUnidad.getSelectedItem();
 
-        if (nombre.isEmpty() || descripcion.isEmpty() || cantidadTexto.isEmpty()) {
+        // Validar campos vacíos
+        if (nombre.isEmpty() || descripcion.isEmpty() || cantidadTexto.isEmpty() || precioTexto.isEmpty() || unidadNombre == null || unidadNombre.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.", "Campos vacíos", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
+        // Validar cantidad como número entero positivo
         int cantidad;
         try {
             cantidad = Integer.parseInt(cantidadTexto);
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor que cero.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "La cantidad debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        // Validar precio como BigDecimal positivo
+        BigDecimal precio;
+        try {
+            precio = new BigDecimal(precioTexto);
+            if (precio.compareTo(BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this, "El precio debe ser mayor que cero.", "Valor inválido", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "El precio debe ser un número válido.", "Error de formato", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Buscar el objeto Tipocantidad correspondiente
+        Tipocantidad unidadSeleccionada = null;
+        try {
+            List<Tipocantidad> listaUnidades = jpaUnidad.findTipocantidadEntities();
+            for (Tipocantidad tipo : listaUnidades) {
+                if (tipo.getNombre().equals(unidadNombre)) {
+                    unidadSeleccionada = tipo;
+                    break;
+                }
+            }
+            if (unidadSeleccionada == null) {
+                JOptionPane.showMessageDialog(this, "Unidad seleccionada no válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al buscar unidad: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Validar selección de fila
         if (idSeleccionado != -1) {
-            editarInsumo(idSeleccionado, nombre, descripcion, cantidad);
+            editarInsumo(idSeleccionado, nombre, descripcion, cantidad, unidadSeleccionada, precio);  // <-- Pasar precio aquí
+
+            // Limpiar campos
             txtNombre.setText("");
             txtDescripccion.setText("");
             txtCantidad.setText("");
+            txtPrecio.setText("");
+            comboUnidad.setSelectedIndex(0);
             idSeleccionado = -1;
+
         } else {
             JOptionPane.showMessageDialog(this, "Selecciona una fila primero para editar.");
         }
+    }//GEN-LAST:event_btnEditarActionPerformed
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void txtPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioActionPerformed
+
+    private void txtPrecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioKeyTyped
+        // TODO add your handling code here:
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c) && !Character.isISOControl(c)) {
+            JOptionPane.showMessageDialog(null, "Solo se permiten números");
+            evt.consume(); // Evita que el carácter se escriba
+            getToolkit().beep(); // Sonido de advertencia
+        }
+
+    }//GEN-LAST:event_txtPrecioKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnEditar;
+    private javax.swing.JComboBox<String> comboUnidad;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelCentro;
     private javax.swing.JPanel panelNorte;
@@ -384,5 +581,6 @@ public class agregarInsumos extends javax.swing.JPanel {
     private javax.swing.JTextField txtCantidad;
     private javax.swing.JTextField txtDescripccion;
     private javax.swing.JTextField txtNombre;
+    private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
 }

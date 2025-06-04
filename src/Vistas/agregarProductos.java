@@ -102,9 +102,10 @@ public class agregarProductos extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         Archivo = new javax.swing.JButton();
         btnAgregarP = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
         comboReceta2 = new javax.swing.JComboBox<>();
         btnAgInsumo = new javax.swing.JButton();
+        btnCancelar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         panelNorte.setBackground(new java.awt.Color(132, 85, 83));
         panelNorte.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -205,13 +206,6 @@ public class agregarProductos extends javax.swing.JPanel {
             }
         });
 
-        btnCancelar.setText("Limpiar campos");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout panelCentroLayout = new javax.swing.GroupLayout(panelCentro);
         panelCentro.setLayout(panelCentroLayout);
         panelCentroLayout.setHorizontalGroup(
@@ -245,17 +239,11 @@ public class agregarProductos extends javax.swing.JPanel {
                         .addGap(168, 168, 168)
                         .addComponent(btnAgregarP)))
                 .addGap(103, 109, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCentroLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnCancelar)
-                .addGap(37, 37, 37))
         );
         panelCentroLayout.setVerticalGroup(
             panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelCentroLayout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(btnCancelar)
-                .addGap(48, 48, 48)
+                .addGap(110, 110, 110)
                 .addComponent(jLabel1)
                 .addGap(54, 54, 54)
                 .addGroup(panelCentroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,15 +267,34 @@ public class agregarProductos extends javax.swing.JPanel {
                     .addComponent(Archivo))
                 .addGap(18, 18, 18)
                 .addComponent(btnAgregarP)
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
         comboReceta2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboReceta2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboReceta2ActionPerformed(evt);
+            }
+        });
 
         btnAgInsumo.setText("Agregar");
         btnAgInsumo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAgInsumoActionPerformed(evt);
+            }
+        });
+
+        btnCancelar.setText("Limpiar campos");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        jButton1.setText("Insumos de receta");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -318,15 +325,24 @@ public class agregarProductos extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIzqLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnAgInsumo)
-                        .addGap(141, 141, 141)))
-                .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIzqLayout.createSequentialGroup()
+                                .addComponent(btnAgInsumo)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1)
+                                .addGap(48, 48, 48))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIzqLayout.createSequentialGroup()
+                                .addComponent(btnCancelar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
+                .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
         );
         panelIzqLayout.setVerticalGroup(
             panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelCentro, javax.swing.GroupLayout.PREFERRED_SIZE, 518, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(panelCentro, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
             .addGroup(panelIzqLayout.createSequentialGroup()
-                .addGap(110, 110, 110)
+                .addGap(38, 38, 38)
+                .addComponent(btnCancelar)
+                .addGap(49, 49, 49)
                 .addComponent(jLabel12)
                 .addGap(54, 54, 54)
                 .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -341,7 +357,10 @@ public class agregarProductos extends javax.swing.JPanel {
                     .addComponent(jLabel11)
                     .addComponent(txtcantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(38, 38, 38)
-                .addComponent(btnAgInsumo))
+                .addGroup(panelIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAgInsumo)
+                    .addComponent(jButton1))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -354,7 +373,7 @@ public class agregarProductos extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(panelNorte, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelNorte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(panelIzq, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE))
         );
@@ -412,17 +431,26 @@ public class agregarProductos extends javax.swing.JPanel {
 
     public void guardarReceta(String descripcion) {
         try {
+            // Verificar si ya existe una receta con la misma descripción
+            List<Receta> recetasExistentes = jpareceta.findRecetaEntities();
+            for (Receta r : recetasExistentes) {
+                if (r.getDescripcion().equalsIgnoreCase(descripcion.trim())) {
+                    JOptionPane.showMessageDialog(null, "Ya existe una receta con ese nombre.", "Duplicado", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
+
+            // Si no existe, guardar nueva receta
             Receta receta = new Receta();
-            receta.setDescripcion(descripcion);
+            receta.setDescripcion(descripcion.trim());
             jpareceta.create(receta);
+
             llenarComboReceta();
-            JOptionPane.showMessageDialog(null, "Receta guardado con éxito");
+            JOptionPane.showMessageDialog(null, "Receta guardada con éxito");
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al guardar la receta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
         }
-
     }
 
     public void llenarComboImagen() {
@@ -666,6 +694,14 @@ public class agregarProductos extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboInsumoActionPerformed
 
+    private void comboReceta2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboReceta2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboReceta2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Archivo;
@@ -676,6 +712,7 @@ public class agregarProductos extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> comboReceta;
     private javax.swing.JComboBox<String> comboReceta2;
     private javax.swing.JButton crearReceta;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
