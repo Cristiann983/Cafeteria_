@@ -41,7 +41,7 @@ public class VistaVentas extends javax.swing.JPanel {
     private final EnumStatusJpaController jpaestatus;
     private final PedidoproductoJpaController jpapedidop;
     private DefaultTableModel tabla;
-    private final String[] columnas = {"Id Pedido", "Id venta", "Fecha", "Producto", "Cantidad", "Total", "Estatus"};
+    private final String[] columnas = {"Id Pedido", "Id venta", "Fecha", "Producto", "Cantidad", "Total","Estatus"};
 
     /**
      * Creates new form Venta
@@ -188,7 +188,7 @@ public class VistaVentas extends javax.swing.JPanel {
             Set<String> fechasAgregadas = new HashSet<>();
 
             for (Pedido p : jpapedido.findPedidoEntities()) {
-                if ("Entregado".equalsIgnoreCase(p.getIdStatus().getDescripcion())) {
+                if ("Mesa Desocupada".equalsIgnoreCase(p.getIdStatus().getDescripcion())) {
                     Date fecha = p.getFecha();
                     if (fecha != null) {
                         String fechaFormateada = new SimpleDateFormat("yyyy-MM-dd").format(fecha);
@@ -238,7 +238,7 @@ public class VistaVentas extends javax.swing.JPanel {
 
         for (Venta v : jpaVenta.findVentaEntities()) {
             Pedido pedido = v.getIdPedio();
-            if (!"Entregado".equalsIgnoreCase(pedido.getIdStatus().getDescripcion())) continue;
+            if (!"Mesa Desocupada".equalsIgnoreCase(pedido.getIdStatus().getDescripcion())) continue;
 
             Date fechaPedido = pedido.getFecha();
             if (fechaPedido == null) continue;
@@ -266,7 +266,7 @@ public class VistaVentas extends javax.swing.JPanel {
                         double precioUnitario = pp.getIdProducto().getPrecio();
                         double precioTotal = cantidad * precioUnitario;
                         total += precioTotal;
-
+                        String  estatus= "Pagado";
                         tabla.addRow(new Object[]{
                             pedido.getIdPedido(),
                             v.getIdVenta(),
@@ -274,7 +274,7 @@ public class VistaVentas extends javax.swing.JPanel {
                             pp.getIdProducto().getDescripcion(),
                             cantidad,
                             precioTotal,
-                            pedido.getIdStatus().getDescripcion()
+                            estatus
                         });
                     }
                 }

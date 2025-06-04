@@ -45,8 +45,8 @@ public class Carrito extends javax.swing.JPanel {
     private EnumStatusJpaController jpaStatus;
     private PedidoproductoJpaController jpaPedidoProducto;
     private DefaultTableModel tabla;
-    private final String[] columnas = {"Id Pedido","Id Mesa", "Producto", "Cantidad", "Precio" , "Estatus"};
-
+    private final String[] columnas = {"Id Pedido","Id Mesa", "Producto", "Cantidad", "Precio" , "Estatus De Mesa"};
+    
     /**
      * Creates new form Carrito
      */
@@ -83,7 +83,7 @@ public class Carrito extends javax.swing.JPanel {
                 int id = pedido.getIdPedido();
                 String estado = pedido.getIdStatus().getDescripcion();
 
-                if ("En proceso".equalsIgnoreCase(estado) && pedidosAgregados.add(id)) {
+                if ("Mesa Ocupada".equalsIgnoreCase(estado) && pedidosAgregados.add(id)) {
                     comboPedido.addItem(String.valueOf(id));
                 }
             }
