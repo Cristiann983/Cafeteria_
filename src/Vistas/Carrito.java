@@ -80,10 +80,11 @@ public class Carrito extends javax.swing.JPanel {
 
             for (Pedidoproducto pp : jpaPedidoProducto.findPedidoproductoEntities()) {
                 Pedido pedido = pp.getIdPedido();
+               
                 int id = pedido.getIdPedido();
                 String estado = pedido.getIdStatus().getDescripcion();
 
-                if ("En proceso".equalsIgnoreCase(estado) && pedidosAgregados.add(id)) {
+                if ("Mesa Ocupada".equalsIgnoreCase(estado) && pedidosAgregados.add(id)) {
                     comboPedido.addItem(String.valueOf(id));
                 }
             }
@@ -203,9 +204,9 @@ public class Carrito extends javax.swing.JPanel {
         try {
             int idPedido = Integer.parseInt(idPedidoStr);
 
-            if (!hayStockDisponible(idPedido)) {
+         /**   if (!hayStockDisponible(idPedido)) {
                 return;
-            }
+            }**/
 
             // Crear y configurar la vista de factura
             VistaFactura vistaFactura = new VistaFactura();
@@ -342,31 +343,30 @@ public class Carrito extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnAceptarvLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
                 .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4))
+                .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(btnAceptarvLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel4))
+                        .addGap(18, 18, 18)
+                        .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtSubtotal, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                            .addComponent(txtIVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 404, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnAceptarvLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(btnAceptarvLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnAceptarvLayout.createSequentialGroup()
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(48, 48, 48))
-                            .addGroup(btnAceptarvLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtSubtotal, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                                    .addComponent(txtIVA, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(txtTotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(btnAceptarvLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
-                .addGap(35, 35, 35)
-                .addComponent(btnPago)
-                .addGap(54, 54, 54))
+                                .addGap(119, 119, 119))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnAceptarvLayout.createSequentialGroup()
+                                .addComponent(jButton1)
+                                .addGap(18, 18, 18)))
+                        .addComponent(btnPago)
+                        .addGap(15, 15, 15))))
         );
         btnAceptarvLayout.setVerticalGroup(
             btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -395,7 +395,7 @@ public class Carrito extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(txtTotal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(btnAceptarvLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(btnPago))
                 .addGap(20, 20, 20))

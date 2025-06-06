@@ -232,7 +232,7 @@ public class VistaFactura extends javax.swing.JPanel {
         }
 
         try {
-            actualizarStockYPedido();
+            //actualizarStockYPedido();
 
             Factura nuevaFactura = new Factura();
             nuevaFactura.setFecha(new Date());
@@ -244,7 +244,10 @@ public class VistaFactura extends javax.swing.JPanel {
             Venta nuevaVenta = new Venta();
             nuevaVenta.setIdPedio(pedido);
             nuevaVenta.setTotal(BigDecimal.valueOf(totales));
+<<<<<<< HEAD
 
+=======
+>>>>>>> ccb8ad71aa6c6c54ead6c9b95aab034f2e6eb33b
             jpaVenta.create(nuevaVenta);
             java.awt.Window ventana = javax.swing.SwingUtilities.getWindowAncestor(this);
             if (ventana != null) {
@@ -324,7 +327,10 @@ public class VistaFactura extends javax.swing.JPanel {
             Venta nuevaVenta = new Venta();
             nuevaVenta.setIdPedio(pedido);
             nuevaVenta.setTotal(BigDecimal.valueOf(totales));
+<<<<<<< HEAD
     
+=======
+>>>>>>> ccb8ad71aa6c6c54ead6c9b95aab034f2e6eb33b
             jpaVenta.create(nuevaVenta);
             JOptionPane.showMessageDialog(null, "Pedido finalizado y stock actualizado correctamente.");
 
